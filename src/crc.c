@@ -79,9 +79,8 @@ uint8_t crc8_T(uint8_t *table, uint8_t * data, size_t data_size, uint8_t init, b
 uint16_t crc16_T(uint16_t *table, uint8_t * data, size_t data_size, uint16_t init, bool refin, bool refout, uint16_t xor_out) {
     uint16_t crc = init;
     for(size_t i = 0; i < data_size; ++i) {
-//TODO: crc ^= (uint16_t)(refin ? rev8(data[i]) : data[i]) << 8;
-        uint16_t tmp = data[i] ^ (refin ? rev16(crc) : crc);
-        crc = (refin ? rev16(table[tmp&0xFF]) : table[tmp&0xFF]);
+        uint8_t tmp = (crc >> 8) ^ (refin ? rev8(data[i]) : data[i]);
+        crc = (crc<<8) ^ table[tmp];
 #ifdef DEBUG_CRC
         printf("CRC = [0x%.4X] at iteration [%ld] with tmp [0x%.4X]\n",crc,i,tmp);
 #endif
@@ -92,8 +91,8 @@ uint16_t crc16_T(uint16_t *table, uint8_t * data, size_t data_size, uint16_t ini
 uint32_t crc32_T(uint32_t *table, uint8_t * data, size_t data_size, uint32_t init, bool refin, bool refout, uint32_t xor_out) {
     uint32_t crc = init;
     for(size_t i = 0; i < data_size; ++i) {
-        uint8_t tmp = data[i] ^ (refin ? rev32(crc) : crc);
-        crc = (refin ? rev32(table[tmp]) : table[tmp]);
+        uint8_t tmp = (crc >> 24) ^ (refin ? rev8(data[i]) : data[i]);
+        crc = (crc<<8) ^ table[tmp];
 #ifdef DEBUG_CRC
         printf("CRC = [0x%.8X] at iteration [%ld] with tmp [0x%.8X]\n",crc,i,tmp);
 #endif
