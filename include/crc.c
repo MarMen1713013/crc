@@ -10,7 +10,7 @@ uint8_t crc8(
     //Sanity check
     if(data == NULL) return 0;
     uint8_t crc = init;
-    for (size_t i = 0; i < data_size; i++) {
+    for(size_t i = 0; i < data_size; i++) {
         crc ^= (refin ? rev8(data[i]) : data[i]);
         crc = core8(crc,poly);
     }
@@ -38,7 +38,7 @@ uint8_t rev8(uint8_t in) {
 }
 
 uint8_t core8(uint8_t val, uint8_t poly) {
-    for (size_t j = 0; j < 8; j++) {
+    for(size_t j = 0; j < 8; j++) {
         if (val & 0x80) val = (val << 1) ^ poly;
         else val <<= 1;
     }
@@ -47,7 +47,7 @@ uint8_t core8(uint8_t val, uint8_t poly) {
 
 void gen_lookup8(uint8_t *dest, uint8_t poly, bool refin) {
     //iterate over all byte values 0 - 255
-    for (int dividend = 0; dividend < 256; dividend++) {
+    for(size_t dividend = 0; dividend < 256; dividend++) {
         uint8_t crc = refin ? rev8(dividend) : dividend;
         //calculate the CRC-8 value for current byte
         crc = refin ? rev8(core8(crc,poly)) : core8(crc,poly);
@@ -97,7 +97,7 @@ uint16_t rev16(uint16_t in) {
 }
 
 uint16_t core16(uint16_t val, uint16_t poly) {
-    for (size_t j = 0; j < 8; j++) {
+    for(size_t j = 0; j < 8; j++) {
         if (val & 0x8000) val = (val << 1) ^ poly;
         else val <<= 1;
     }
@@ -106,7 +106,7 @@ uint16_t core16(uint16_t val, uint16_t poly) {
 
 void gen_lookup16(uint16_t *dest, uint16_t poly, bool refin) {
     //iterate over all byte values 0 - 255
-    for (size_t dividend = 0; dividend < 256; dividend++) {
+    for(size_t dividend = 0; dividend < 256; dividend++) {
         uint16_t crc = (uint16_t)(refin ? rev8(dividend) : dividend) << 8;
         //calculate the CRC-16 value for current byte
         crc = refin ? rev16(core16(crc,poly)) : core16(crc,poly);
@@ -121,7 +121,7 @@ uint32_t crc32(
     //Sanity check
     if(data == NULL) return 0;
     uint32_t crc = init;
-    for (size_t i = 0; i < data_size; i++) {
+    for(size_t i = 0; i < data_size; i++) {
         crc ^= (uint32_t)(refin ? rev8(data[i]) : data[i]) << 24;
         crc = core32(crc,poly);
     }
@@ -167,7 +167,7 @@ uint32_t core32(uint32_t val, uint32_t poly) {
 
 void gen_lookup32(uint32_t *dest, uint32_t poly, bool refin) {
     //iterate over all byte values 0 - 255
-    for (size_t dividend = 0; dividend < 256; dividend++) {
+    for(size_t dividend = 0; dividend < 256; dividend++) {
         uint32_t crc = (uint32_t)(refin ? rev8(dividend) : dividend) << 24;
         //calculate the CRC-32 value for current byte
         crc = refin ? rev32(core32(crc,poly)) : core32(crc,poly);
